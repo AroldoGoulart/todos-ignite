@@ -11,26 +11,47 @@ interface Task {
 }
 
 export function Home() {
-  // const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   function handleAddTask(newTaskTitle: string) {
-    //TODO - add new task if it's not empty
+    if(newTaskTitle) {
+      const newDate = {
+        id: new Date().getTime(),
+        title: newTaskTitle,
+        done: false
+      }
+      setTasks(oldState => [...oldState, newDate])
+    }
   }
 
   function handleMarkTaskAsDone(id: number) {
-    //TODO - mark task as done if exists
+    let tasksChanged = tasks
+    if(tasksChanged[id]) {
+      tasksChanged[id] = {
+        ...tasksChanged[id],
+        done: !tasksChanged[id].done,
+      }
+    }
+    setTasks(tasksChanged)
   }
 
   function handleRemoveTask(id: number) {
-    //TODO - remove task from state
+    let tasksChanged = tasks
+    if(tasksChanged[id]) {
+      let newList = []
+      for(let i=0; i < tasksChanged.length; i++) {
+        if(id !== i) {
+          newList[i] = tasksChanged[i]
+        }
+      }
+      setTasks(newList)
+    }
   }
 
   return (
     <>
       <Header />
-
       <TodoInput addTask={handleAddTask} />
-
       <MyTasksList 
         tasks={tasks} 
         onPress={handleMarkTaskAsDone} 
